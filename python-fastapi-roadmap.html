@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python → FastAPI → SQL — Complete Roadmap by Manish Kumar</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #08090d;
+  --bg2: #0d0e14;
+  --bg3: #111318;
+  --card: #15161e;
+  --card-hover: #191b24;
+  --border: rgba(255,255,255,0.05);
+  --border2: rgba(255,255,255,0.09);
+  --text: #e2e4f0;
+  --text2: #868899;
+  --text3: #4a4c60;
+  --py-yellow: #f5d44e;
+  --py-blue: #4b9eff;
+  --py-yellow-dim: rgba(245,212,78,0.12);
+  --py-blue-dim: rgba(75,158,255,0.12);
+  --fast-teal: #00d4aa;
+  --fast-teal-dim: rgba(0,212,170,0.12);
+  --sql-orange: #ff7c4d;
+  --sql-orange-dim: rgba(255,124,77,0.12);
+  --purple: #9b7fff;
+  --purple-dim: rgba(155,127,255,0.12);
+  --pink: #f472b6;
+  --pink-dim: rgba(244,114,182,0.12);
+  --green: #34d399;
+  --green-dim: rgba(52,211,153,0.12);
+  --amber: #fbbf24;
+  --amber-dim: rgba(251,191,36,0.1);
+  --red: #f87171;
+  --red-dim: rgba(248,113,113,0.1);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── STICKY NAV ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(8,9,13,0.9);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 11px 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
+}
+.topbar-title { font-size: 13px; font-weight: 500; color: var(--text2); }
+.topbar-title span { color: var(--text); }
+.btn-row { display: flex; gap: 8px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 7px;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  border: none; font-family: inherit;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--fast-teal); color: #08090d; }
+.btn-primary:hover { opacity: 0.85; }
+.btn-ghost {
+  background: var(--bg3); color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.btn-ghost:hover { background: var(--card); color: var(--text); }
+
+/* ── HERO ── */
+.hero {
+  padding: 90px 24px 72px;
+  text-align: center;
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 50%, rgba(245,212,78,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 50%, rgba(0,212,170,0.07) 0%, transparent 60%);
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-pills {
+  display: flex; justify-content: center; gap: 8px;
+  flex-wrap: wrap; margin-bottom: 32px;
+}
+.pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 6px 14px; border-radius: 100px;
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  border: 1px solid;
+}
+.pill-python { background: var(--py-yellow-dim); color: var(--py-yellow); border-color: rgba(245,212,78,0.25); }
+.pill-fastapi { background: var(--fast-teal-dim); color: var(--fast-teal); border-color: rgba(0,212,170,0.25); }
+.pill-sql { background: var(--sql-orange-dim); color: var(--sql-orange); border-color: rgba(255,124,77,0.25); }
+.pill-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; display: inline-block; }
+
+h1 {
+  font-size: clamp(34px, 5.5vw, 68px);
+  font-weight: 700; letter-spacing: -0.035em;
+  line-height: 1.05; margin-bottom: 18px;
+}
+.h1-line1 { display: block; color: var(--py-yellow); }
+.h1-arrow { display: inline-block; color: var(--text3); margin: 0 12px; font-weight: 300; }
+.h1-line2 { display: block; }
+.h1-gradient {
+  background: linear-gradient(90deg, var(--fast-teal), var(--py-blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.h1-sql { color: var(--sql-orange); }
+
+.hero-sub {
+  font-size: 17px; color: var(--text2);
+  max-width: 540px; margin: 0 auto 44px;
+}
+
+.hero-stats {
+  display: flex; justify-content: center;
+  gap: 0; flex-wrap: wrap;
+  border: 1px solid var(--border2);
+  border-radius: 14px; overflow: hidden;
+  max-width: 540px; margin: 0 auto;
+  background: var(--card);
+}
+.stat {
+  flex: 1; min-width: 120px;
+  padding: 20px 16px; text-align: center;
+  border-right: 1px solid var(--border);
+}
+.stat:last-child { border-right: none; }
+.stat-num { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+.stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+
+/* ── PHASE LABEL ── */
+.phase-label {
+  display: flex; align-items: center; gap: 14px;
+  padding: 40px 0 14px;
+  margin-top: 8px;
+}
+.phase-label-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+}
+.phase-tag {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 5px 14px;
+  border-radius: 100px; border: 1px solid; white-space: nowrap;
+}
+.phase-python .phase-tag { background: var(--py-yellow-dim); color: var(--py-yellow); border-color: rgba(245,212,78,0.2); }
+.phase-fastapi .phase-tag { background: var(--fast-teal-dim); color: var(--fast-teal); border-color: rgba(0,212,170,0.2); }
+.phase-sql .phase-tag { background: var(--sql-orange-dim); color: var(--sql-orange); border-color: rgba(255,124,77,0.2); }
+.phase-advanced .phase-tag { background: var(--purple-dim); color: var(--purple); border-color: rgba(155,127,255,0.2); }
+.phase-deploy .phase-tag { background: var(--green-dim); color: var(--green); border-color: rgba(52,211,153,0.2); }
+
+/* ── GRID ── */
+.container {
+  max-width: 1060px; margin: 0 auto; padding: 0 24px 80px;
+}
+
+.sections-grid {
+  display: grid; grid-template-columns: 1fr;
+  gap: 2px; background: var(--border);
+  border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.section-block { background: var(--bg); transition: background 0.15s; }
+
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 18px 22px; cursor: pointer; user-select: none;
+  transition: background 0.15s;
+}
+.section-header:hover { background: var(--card-hover); }
+
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  color: var(--text3); min-width: 26px;
+}
+.section-icon {
+  width: 30px; height: 30px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.section-title { flex: 1; font-size: 14px; font-weight: 500; color: var(--text); }
+.section-count {
+  font-size: 11px; color: var(--text3);
+  background: var(--bg3); border: 1px solid var(--border);
+  padding: 2px 10px; border-radius: 100px; margin-right: 6px;
+}
+.chevron { color: var(--text3); font-size: 16px; transition: transform 0.2s; flex-shrink: 0; }
+.section-block.open .chevron { transform: rotate(180deg); }
+
+.section-lessons {
+  display: none; padding: 0 22px 18px;
+  border-top: 1px solid var(--border);
+  background: var(--bg2);
+}
+.section-block.open .section-lessons { display: block; }
+
+.lessons-list {
+  list-style: none; padding-top: 14px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1px 28px;
+}
+.lesson-item {
+  display: flex; align-items: baseline; gap: 9px;
+  padding: 4px 0; font-size: 12.5px; color: var(--text2);
+  transition: color 0.15s;
+}
+.lesson-item:hover { color: var(--text); }
+.lesson-dot {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: var(--text3); flex-shrink: 0; margin-top: 6px;
+}
+
+/* Color themes */
+.ic-yellow .section-icon { background: var(--py-yellow-dim); color: var(--py-yellow); }
+.ic-blue .section-icon { background: var(--py-blue-dim); color: var(--py-blue); }
+.ic-teal .section-icon { background: var(--fast-teal-dim); color: var(--fast-teal); }
+.ic-orange .section-icon { background: var(--sql-orange-dim); color: var(--sql-orange); }
+.ic-purple .section-icon { background: var(--purple-dim); color: var(--purple); }
+.ic-pink .section-icon { background: var(--pink-dim); color: var(--pink); }
+.ic-green .section-icon { background: var(--green-dim); color: var(--green); }
+.ic-amber .section-icon { background: var(--amber-dim); color: var(--amber); }
+.ic-red .section-icon { background: var(--red-dim); color: var(--red); }
+
+/* footer */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 28px 24px; text-align: center;
+  color: var(--text3); font-size: 12px;
+}
+footer a { color: var(--fast-teal); text-decoration: none; }
+
+.copy-toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--card); border: 1px solid var(--border2);
+  color: var(--text); font-size: 13px;
+  padding: 9px 20px; border-radius: 100px;
+  transition: transform 0.3s ease; z-index: 9999;
+  pointer-events: none; white-space: nowrap;
+}
+.copy-toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 600px) {
+  h1 { font-size: 30px; }
+  .lessons-list { grid-template-columns: 1fr; }
+  .hero-stats { max-width: 100%; }
+  .stat { min-width: 90px; padding: 14px 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title"><span>Python → FastAPI → SQL</span> — Complete Roadmap · Manish Kumar</div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="toggleAll()">Expand all</button>
+    <button class="btn btn-primary" onclick="copyLink()">🔗 Copy link</button>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-pills">
+    <span class="pill pill-python"><span class="pill-dot"></span>Python</span>
+    <span class="pill pill-fastapi"><span class="pill-dot"></span>FastAPI</span>
+    <span class="pill pill-sql"><span class="pill-dot"></span>SQL &amp; Databases</span>
+  </div>
+  <h1>
+    <span class="h1-line1">Python</span>
+    <span style="display:block; font-size: 0.55em; color: var(--text3); font-weight:300; letter-spacing:0; margin: 8px 0;">↓</span>
+    <span class="h1-line2"><span class="h1-gradient">FastAPI</span> <span class="h1-arrow">+</span> <span class="h1-sql">SQL</span></span>
+  </h1>
+  <p class="hero-sub">Root-level roadmap from Python basics to production-grade REST APIs with relational databases.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num" style="color:var(--py-yellow)">22</div>
+      <div class="stat-label">Sections</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" style="color:var(--fast-teal)">300+</div>
+      <div class="stat-label">Topics</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" style="color:var(--sql-orange)">4</div>
+      <div class="stat-label">Real Projects</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" style="color:var(--purple)">∞</div>
+      <div class="stat-label">API endpoints</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ═══════════════ PHASE 1: PYTHON ═══════════════ -->
+  <div class="phase-label phase-python">
+    <div class="phase-label-line"></div>
+    <div class="phase-tag">Phase 1 — Python Foundations</div>
+    <div class="phase-label-line"></div>
+  </div>
+
+  <div class="sections-grid">
+
+    <div class="section-block ic-yellow" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <div class="section-icon">🐍</div>
+        <span class="section-title">Introduction to Python</span>
+        <span class="section-count">10 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>What is Python and why use it?</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Installing Python (pyenv, official installer)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Python REPL and running .py files</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>pip and package management</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Virtual environments (venv, virtualenv)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Python vs other languages (Node.js, Java)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Setting up VS Code / PyCharm for Python</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Writing and running your first Python script</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>PEP 8 — Python Style Guide basics</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Understanding the Python interpreter</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-yellow" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <div class="section-icon">🔤</div>
+        <span class="section-title">Variables, Data Types &amp; Operators</span>
+        <span class="section-count">14 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Variables and assignment</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>int, float, complex numbers</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Strings — creation, indexing, slicing</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>String methods and f-strings</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>bool and None types</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Type conversion (int(), str(), float())</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Arithmetic operators</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Comparison and logical operators</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Bitwise operators</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Assignment operators (+=, -=, **=)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Walrus operator :=</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>id(), type() and is vs ==</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Mutable vs Immutable types</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Python memory model basics</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-yellow" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <div class="section-icon">🔀</div>
+        <span class="section-title">Control Flow</span>
+        <span class="section-count">10 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>if / elif / else statements</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Nested conditions</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Ternary expression (inline if)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>while loops</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>for loops and range()</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>break, continue, pass</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>else clause on loops</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>match / case (Python 3.10+)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Nested loops</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Loop patterns and best practices</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-yellow" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <div class="section-icon">📦</div>
+        <span class="section-title">Data Structures — Lists, Tuples, Sets, Dicts</span>
+        <span class="section-count">18 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Lists — creation, indexing, slicing</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>List methods (append, extend, pop, sort…)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>List comprehensions</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Nested lists (2D arrays)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Tuples — immutability and use cases</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Tuple packing and unpacking</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Sets — unique elements, set operations</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Frozensets</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Dictionaries — creation, access, update</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Dict methods (.get, .items, .keys, .values)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Dict comprehensions</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Nested dicts and complex structures</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Unpacking with * and **</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>collections module (Counter, defaultdict, OrderedDict, deque)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Choosing the right data structure</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Time complexity of operations</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-blue" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">05</span>
+        <div class="section-icon">🔧</div>
+        <span class="section-title">Functions and Scope</span>
+        <span class="section-count">16 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Defining and calling functions</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Parameters: positional, keyword, default</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>*args and **kwargs</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Return values and multiple return</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Scope — LEGB rule</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>global and nonlocal keywords</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Lambda functions</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Higher-order functions (map, filter, reduce)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Closures</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Decorators — creating and using</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>functools.wraps</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Recursion and base cases</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Memoization with functools.lru_cache</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Type hints in function signatures</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Docstrings and help()</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Pure functions and side effects</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-blue" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">06</span>
+        <div class="section-icon">🏛️</div>
+        <span class="section-title">Object-Oriented Programming (OOP)</span>
+        <span class="section-count">18 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Classes and objects</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>__init__ constructor</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Instance vs class vs static variables</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Instance methods, class methods, static methods</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Inheritance and super()</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Multiple inheritance and MRO</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Encapsulation — public, protected, private</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Polymorphism and duck typing</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Abstract classes (ABC)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Interfaces via Protocols</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Dunder methods (__str__, __repr__, __eq__, __len__…)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Properties with @property</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Dataclasses (@dataclass)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Slots (__slots__)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Composition vs Inheritance</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>SOLID principles in Python</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-blue" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">07</span>
+        <div class="section-icon">⚠️</div>
+        <span class="section-title">Modules, Packages &amp; Error Handling</span>
+        <span class="section-count">14 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Importing modules — import, from, as</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Creating your own module</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Packages and __init__.py</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>__name__ == "__main__"</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Standard library overview (os, sys, pathlib, json, re)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>try / except / else / finally</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Exception types hierarchy</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Raising exceptions (raise)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Custom exception classes</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Context managers (with statement)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Creating custom context managers</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Logging module basics</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Debugging with pdb / breakpoint()</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Reading and writing files (open, pathlib)</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-blue" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">08</span>
+        <div class="section-icon">⚡</div>
+        <span class="section-title">Async Python — Concurrency &amp; Async/Await</span>
+        <span class="section-count">14 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Synchronous vs Asynchronous programming</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Generators and yield</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Iterators and the iteration protocol</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>asyncio — event loop fundamentals</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>async def and await</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>asyncio.gather() — concurrent coroutines</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>asyncio.create_task()</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Async context managers and iterators</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Threading vs Multiprocessing vs Asyncio</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>GIL — Global Interpreter Lock explained</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>ThreadPoolExecutor and ProcessPoolExecutor</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>asyncio.run_in_executor()</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Async generators</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>When to use which concurrency model</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-blue" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">09</span>
+        <div class="section-icon">🔬</div>
+        <span class="section-title">Advanced Python — Type Hints, Pydantic &amp; Testing</span>
+        <span class="section-count">14 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Type hints in depth — Optional, Union, Any</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Generic types — List[T], Dict[K,V], Tuple</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>TypeVar and Generic classes</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Literal, Final, TypedDict</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>mypy static type checking</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Pydantic v2 — BaseModel, Field, validators</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Pydantic model validation and serialization</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Pydantic settings management</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Unit testing with pytest</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Fixtures and parametrize in pytest</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Mocking with unittest.mock</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Coverage with pytest-cov</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Test-Driven Development (TDD) basics</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Code formatting — Black, Ruff, isort</li>
+      </ul></div>
+    </div>
+
+  </div><!-- end sections-grid phase 1 -->
+
+  <!-- ═══════════════ PHASE 2: SQL ═══════════════ -->
+  <div class="phase-label phase-sql">
+    <div class="phase-label-line"></div>
+    <div class="phase-tag">Phase 2 — SQL &amp; Relational Databases</div>
+    <div class="phase-label-line"></div>
+  </div>
+
+  <div class="sections-grid">
+
+    <div class="section-block ic-orange" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">10</span>
+        <div class="section-icon">🗄️</div>
+        <span class="section-title">Database Fundamentals &amp; SQL Basics</span>
+        <span class="section-count">16 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>What is a relational database?</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>SQL vs NoSQL — when to use what</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Installing PostgreSQL (local + Docker)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>psql CLI and GUI tools (pgAdmin, TablePlus, DBeaver)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Creating databases and tables (CREATE DATABASE, CREATE TABLE)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Data types — INTEGER, VARCHAR, TEXT, BOOLEAN, TIMESTAMP, JSONB</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>INSERT, SELECT, UPDATE, DELETE (CRUD)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>WHERE, ORDER BY, LIMIT, OFFSET</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Filtering — LIKE, IN, BETWEEN, IS NULL</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Aggregate functions — COUNT, SUM, AVG, MIN, MAX</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>GROUP BY and HAVING</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Aliases (AS) and calculated columns</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>DISTINCT and deduplication</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Subqueries — correlated and non-correlated</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>CTEs (WITH clause)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Window functions — ROW_NUMBER, RANK, LAG, LEAD</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-orange" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">11</span>
+        <div class="section-icon">🔗</div>
+        <span class="section-title">Relationships, Joins &amp; Schema Design</span>
+        <span class="section-count">14 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Primary keys and foreign keys</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>One-to-One, One-to-Many, Many-to-Many relationships</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>JOIN types — INNER, LEFT, RIGHT, FULL OUTER, CROSS</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Self-join</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Junction/bridge tables for M:M</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Referential integrity and CASCADE</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>UNIQUE, NOT NULL, CHECK constraints</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Database normalization — 1NF, 2NF, 3NF</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Denormalization trade-offs</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Entity-Relationship (ER) diagrams</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Schema design patterns for common apps</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>SERIAL vs UUID vs BIGSERIAL primary keys</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Indexes — B-tree, partial, composite, GIN</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>EXPLAIN ANALYZE — query planning basics</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-orange" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">12</span>
+        <div class="section-icon">🔒</div>
+        <span class="section-title">Transactions, Security &amp; Advanced SQL</span>
+        <span class="section-count">12 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Transactions — BEGIN, COMMIT, ROLLBACK</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>ACID properties</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Isolation levels — READ COMMITTED, REPEATABLE READ, SERIALIZABLE</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Deadlocks — causes and prevention</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Stored procedures and functions in PostgreSQL</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Triggers</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Views and materialized views</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Roles, permissions and GRANT / REVOKE</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>SQL injection — attacks and parameterized queries</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Backup and restore — pg_dump, pg_restore</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Connection pooling — PgBouncer basics</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>PostgreSQL-specific features — JSONB, arrays, full-text search</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-amber" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">13</span>
+        <div class="section-icon">🧩</div>
+        <span class="section-title">SQLAlchemy ORM — Python ↔ Database</span>
+        <span class="section-count">16 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>What is an ORM? SQLAlchemy Core vs ORM</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Setting up SQLAlchemy with PostgreSQL</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Defining models with DeclarativeBase</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Column types and constraints</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Relationships — relationship() and back_populates</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Session management — creating and closing sessions</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>CRUD operations with ORM (add, query, update, delete)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Filtering, ordering, limiting queries</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Eager loading vs lazy loading</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Async SQLAlchemy (AsyncSession)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Database migrations with Alembic</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Auto-generating migration scripts</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Upgrading and downgrading migrations</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Using raw SQL with SQLAlchemy (text())</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Repository pattern with SQLAlchemy</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Testing with SQLite in-memory database</li>
+      </ul></div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ PHASE 3: FASTAPI ═══════════════ -->
+  <div class="phase-label phase-fastapi">
+    <div class="phase-label-line"></div>
+    <div class="phase-tag">Phase 3 — FastAPI</div>
+    <div class="phase-label-line"></div>
+  </div>
+
+  <div class="sections-grid">
+
+    <div class="section-block ic-teal" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">14</span>
+        <div class="section-icon">⚡</div>
+        <span class="section-title">FastAPI Fundamentals</span>
+        <span class="section-count">16 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>What is FastAPI? vs Flask vs Django</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Installing FastAPI and Uvicorn</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Creating your first FastAPI app</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Path operations — GET, POST, PUT, PATCH, DELETE</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Path parameters and type validation</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Query parameters — optional and required</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Request body with Pydantic models</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Response models and response_model</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Status codes — status.HTTP_*</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>HTTPException and error responses</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Headers and cookies in requests</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Form data and file uploads</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Automatic docs — Swagger UI and ReDoc</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>How FastAPI uses type hints internally</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>ASGI vs WSGI</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Running with Uvicorn and hot reload</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-teal" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">15</span>
+        <div class="section-icon">🏗️</div>
+        <span class="section-title">Routing, Middleware &amp; App Structure</span>
+        <span class="section-count">12 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>APIRouter — splitting routes into modules</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Including routers with prefix and tags</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Nested routers</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>What is middleware in FastAPI?</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Adding custom middleware</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>CORS middleware configuration</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Request and response lifecycle</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Background tasks</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Lifespan events (startup and shutdown)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Project structure — layered architecture</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Service layer pattern</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Separating routers, schemas, models, services, crud</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-teal" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">16</span>
+        <div class="section-icon">💉</div>
+        <span class="section-title">Dependency Injection &amp; Database Integration</span>
+        <span class="section-count">14 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>What is Dependency Injection (DI)?</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Depends() — creating and using dependencies</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Database session as a dependency (get_db)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Sharing dependencies across routers</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Overriding dependencies for testing</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Class-based dependencies</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Async database sessions with AsyncSession</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Connecting FastAPI + SQLAlchemy + PostgreSQL</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Creating and running Alembic migrations</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>CRUD operations inside route handlers</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Separating DB models from Pydantic schemas</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Input schemas (Create/Update) vs output schemas</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Handling not found — 404 responses</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Async vs sync endpoints — when to use which</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-purple" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">17</span>
+        <div class="section-icon">🔐</div>
+        <span class="section-title">Authentication &amp; Authorization</span>
+        <span class="section-count">16 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Hashing passwords with passlib (bcrypt)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>User registration and login endpoints</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>JSON Web Tokens (JWT) — access and refresh tokens</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>python-jose / PyJWT for token creation</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>OAuth2PasswordBearer and OAuth2PasswordRequestForm</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>get_current_user dependency</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Protecting routes with authenticated dependencies</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Role-based access control (RBAC)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Refresh token flow</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Storing tokens securely (httpOnly cookies vs headers)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>OAuth2 with Google (third-party login)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Email verification with token links</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Password reset flow</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Rate limiting on auth endpoints</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Session-based auth vs JWT — trade-offs</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Security headers and HTTPS best practices</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-purple" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">18</span>
+        <div class="section-icon">🌊</div>
+        <span class="section-title">Advanced FastAPI — WebSockets, Files &amp; Background Jobs</span>
+        <span class="section-count">12 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>WebSockets in FastAPI</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Real-time chat app with WebSockets</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Server-Sent Events (SSE) for streaming</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Streaming responses — StreamingResponse</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>File uploads — UploadFile and multi-file</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Serving static files with StaticFiles</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Background tasks with BackgroundTasks</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Celery + Redis for heavy background jobs</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Scheduled tasks with APScheduler</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Sending emails with FastAPI-Mail</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Caching with Redis (aioredis)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Custom exception handlers</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-pink" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">19</span>
+        <div class="section-icon">🧪</div>
+        <span class="section-title">Testing FastAPI Applications</span>
+        <span class="section-count">10 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>TestClient from httpx / starlette</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Writing unit tests for endpoints</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Testing with a test database (SQLite or separate PG)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Overriding dependencies in tests</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Fixtures for database setup and teardown</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Testing authenticated endpoints</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Mocking external services</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Integration tests</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Coverage reporting</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Async test support with pytest-asyncio</li>
+      </ul></div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ PHASE 4: ADVANCED & PRODUCTION ═══════════════ -->
+  <div class="phase-label phase-advanced">
+    <div class="phase-label-line"></div>
+    <div class="phase-tag">Phase 4 — Production &amp; Advanced Topics</div>
+    <div class="phase-label-line"></div>
+  </div>
+
+  <div class="sections-grid">
+
+    <div class="section-block ic-green" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">20</span>
+        <div class="section-icon">🛡️</div>
+        <span class="section-title">Security, Validation &amp; Performance</span>
+        <span class="section-count">12 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Input validation with Pydantic (custom validators)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>SQL injection prevention — always use ORM / parameterized queries</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>XSS and output encoding</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>CSRF — when it matters in APIs</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Rate limiting with slowapi</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Secure secret management (.env, python-dotenv, AWS Secrets)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>N+1 query problem and solutions (selectinload, joinedload)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Database query optimization with EXPLAIN ANALYZE</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Response caching strategies</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Pagination — offset-based and cursor-based</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Profiling with pyinstrument / cProfile</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Connection pooling — SQLAlchemy pool settings</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-green" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">21</span>
+        <div class="section-icon">📊</div>
+        <span class="section-title">Logging, Monitoring &amp; Observability</span>
+        <span class="section-count">10 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Structured logging with loguru or Python logging</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Request ID middleware for tracing</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Logging request/response in middleware</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Health check endpoints (/health, /readiness)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Prometheus metrics with prometheus-fastapi-instrumentator</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Grafana dashboards for API metrics</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>OpenTelemetry tracing in FastAPI</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Sentry error tracking integration</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Alerting on error rates and latency</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>SLA, SLO, SLI basics for API services</li>
+      </ul></div>
+    </div>
+
+    <div class="section-block ic-teal" onclick="toggle(this)">
+      <div class="section-header">
+        <span class="section-num">22</span>
+        <div class="section-icon">🚢</div>
+        <span class="section-title">Deployment, Docker &amp; CI/CD</span>
+        <span class="section-count">16 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Dockerizing a FastAPI app (Dockerfile)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Docker Compose — FastAPI + PostgreSQL + Redis</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Environment variables in Docker</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Multi-stage Docker builds</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Production server — Gunicorn + Uvicorn workers</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>NGINX as reverse proxy for FastAPI</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>SSL/TLS with Let's Encrypt</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Deploying to AWS EC2 / Railway / Render</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Kubernetes basics — Pods, Services, Deployments</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Running DB migrations in production (Alembic)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Zero-downtime deploys</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>CI/CD with GitHub Actions — test + deploy pipeline</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Secrets in CI/CD (GitHub Secrets)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Managed databases — RDS, Supabase, Neon</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Load balancing and horizontal scaling</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Post-deployment monitoring and rollback strategy</li>
+      </ul></div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════ PHASE 5: CAPSTONE ═══════════════ -->
+  <div class="phase-label phase-deploy">
+    <div class="phase-label-line"></div>
+    <div class="phase-tag">Capstone — Real-World Project</div>
+    <div class="phase-label-line"></div>
+  </div>
+
+  <div class="sections-grid">
+    <div class="section-block" style="background: var(--bg);" onclick="toggle(this)">
+      <div class="section-header" style="background: rgba(0,212,170,0.04);">
+        <span class="section-num" style="color: var(--fast-teal);">★</span>
+        <div class="section-icon" style="background: rgba(0,212,170,0.15); color: var(--fast-teal); font-size: 16px;">🎓</div>
+        <span class="section-title" style="color: #fff; font-weight: 600;">Capstone: Full-Stack Task Management API (Like Notion)</span>
+        <span class="section-count">25 topics</span>
+        <span class="chevron">⌄</span>
+      </div>
+      <div class="section-lessons"><ul class="lessons-list">
+        <li class="lesson-item"><span class="lesson-dot"></span>Project planning — requirements and schema design</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Monorepo structure — FastAPI backend + React frontend</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>User auth — register, login, JWT, refresh tokens</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Workspaces — multi-tenant data isolation</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Projects and boards CRUD</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Tasks — create, assign, status, priority, due dates</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Comments and activity log on tasks</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>File attachments — upload to S3</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Real-time updates with WebSockets</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Full-text search on tasks (PostgreSQL tsvector)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Filtering, sorting and pagination endpoints</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Role-based permissions (owner, editor, viewer)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Email notifications (task assigned, due soon)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Dashboard analytics endpoint</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Rate limiting and security hardening</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Full test suite — unit + integration</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Dockerizing the full stack</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>CI/CD pipeline with GitHub Actions</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Deploying to AWS (EC2 + RDS + S3)</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Prometheus + Grafana monitoring setup</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Custom domain + SSL</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Post-launch performance audit</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Code review — refactoring for production</li>
+        <li class="lesson-item"><span class="lesson-dot"></span>Final retrospective and next-step resources</li>
+      </ul></div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  <p>Python → FastAPI → SQL Roadmap · by <strong style="color: var(--text2)">Manish Kumar</strong> · Built for serious backend engineers</p>
+</footer>
+
+<div class="copy-toast" id="toast">✓ Link copied to clipboard</div>
+
+<script>
+function toggle(el) { el.classList.toggle('open'); }
+
+let allOpen = false;
+function toggleAll() {
+  const blocks = document.querySelectorAll('.section-block');
+  allOpen = !allOpen;
+  blocks.forEach(b => allOpen ? b.classList.add('open') : b.classList.remove('open'));
+  document.querySelector('.btn-ghost').textContent = allOpen ? 'Collapse all' : 'Expand all';
+}
+
+function copyLink() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }).catch(() => { prompt('Copy this link:', url); });
+}
+</script>
+</body>
+</html>
